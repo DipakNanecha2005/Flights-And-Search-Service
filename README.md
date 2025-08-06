@@ -49,10 +49,26 @@ Create a `config.json` file in `src/config/` directory
 
 ### 4. Create the Database
 
-Once your `config.json` is set up, run the **`npx sequelize db:create`** command in `src/` directory to create the development database.
+Once your `config.json` is set up, run the following command inside the `src/` directory to create the development database:
+
+```bash
+npx sequelize db:create
+```
 
 ### 5. Start the service
 
-Run `npm start` command or `npm run dev` command for hot-reloading
+Run Sequelize migrations to create the necessary tables:
+
+```bash
+npx sequelize db:migrate
+```
+
+### 6. Start the service
+
+Now start the server:
+
+```bash
+npm start
+```
 
 ---
