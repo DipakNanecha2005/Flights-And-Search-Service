@@ -4,12 +4,13 @@ import { fileURLToPath, pathToFileURL } from "url";
 import Sequelize from "sequelize";
 import process from "process";
 import configFile from "../config/config.json" with { type: "json" };
+import { NODE_ENV } from "../config/serverConfig.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || "development";
+const env = NODE_ENV || "development";
 const config = configFile[env];
 const db = {};
 
