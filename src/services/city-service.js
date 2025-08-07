@@ -65,6 +65,20 @@ class CityService {
       throw error;
     }
   }
+
+  /**
+   * Retrieves all cities.
+   */
+  async getAllCities(filter) {
+    try {
+      const cities = await this.#cityRepository.getAllCities({
+        name: filter?.name,
+      });
+      return cities;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 const CityServiceinstancce = new CityService();

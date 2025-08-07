@@ -1,3 +1,4 @@
+import { Op } from "sequelize";
 import db from "../models/index.js";
 const { City } = db;
 
@@ -14,6 +15,12 @@ class CityRepository {
   async getCity(cityId) {
     try {
       const city = await City.findByPk(cityId);
+      if (!city) {
+        const error = new Error(`City with id ${cityId} not found.`);
+        error.statusCode = 404;
+        throw error;
+      }
+
       return city;
     } catch (error) {
       throw error;
@@ -29,6 +36,7 @@ class CityRepository {
       const city = await City.create({ name });
       return city;
     } catch (error) {
+      error.message = `Failed to create city. ${error.message}`;
       throw error;
     }
   }
@@ -40,11 +48,19 @@ class CityRepository {
    */
   async updateCity(cityId, data) {
     try {
-      const city = await City.update(data, {
+      const [updated] = await City.update(data, {
         where: {
           id: cityId,
         },
       });
+      if (!updated) {
+        const error = new Error(
+          `City with id ${cityId} not found or no update occurred.`
+        );
+        error.statusCode = 404;
+        throw error;
+      }
+      const city = await this.getCity(cityId);
       return city;
     } catch (error) {
       throw error;
@@ -62,7 +78,43 @@ class CityRepository {
           id: cityId,
         },
       });
+      if (!deleted) {
+        const error = new Error(`City with id ${cityId} not found.`);
+        error.statusCode = 404;
+        throw error;
+      }
+
       return deleted;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /**
+   * Fetches all the cities from the database.
+   */
+  async getAllCities(filter) {
+    try {
+      if (filter?.name) {
+        const cities = await City.findAll({
+          where: {
+            name: {
+              [Op.startsWith]: filter.name,
+            },
+          },
+        });
+
+        return cities;
+      }
+
+      const cities = await City.findAll();
+      if (cities.length === 0) {
+        const error = new Error("No cities found.");
+        error.statusCode = 404;
+        throw error;
+      }
+
+      return cities;
     } catch (error) {
       throw error;
     }

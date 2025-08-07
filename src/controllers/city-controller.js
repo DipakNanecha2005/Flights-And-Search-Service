@@ -15,7 +15,7 @@ export const get = async (req, res) => {
     console.log(error);
     res.status(500).json({
       message: "Cannot get city right now.",
-      error,
+      error: error.message,
       success: false,
     });
   }
@@ -40,7 +40,7 @@ export const create = async (req, res) => {
     console.log(error);
     res.status(500).json({
       message: "Cannot create city right now.",
-      error,
+      error: error.message,
       success: false,
     });
   }
@@ -56,12 +56,6 @@ export const create = async (req, res) => {
 export const update = async (req, res) => {
   try {
     const response = await CityService.updateCity(req.params.id, req.body);
-    if (!response[0]) {
-      return res.status(500).json({
-        success: !!response[0],
-        message: "Internal server error | Cannot update city right now",
-      });
-    }
 
     res.status(200).json({
       response,
@@ -72,7 +66,7 @@ export const update = async (req, res) => {
     console.log(error);
     res.status(500).json({
       message: "Cannot update city right now.",
-      error,
+      error: error.message,
       success: false,
     });
   }
@@ -102,7 +96,28 @@ export const remove = async (req, res) => {
     console.log(error);
     res.status(500).json({
       message: "Cannot delete city right now.",
-      error,
+      error: error.message,
+      success: false,
+    });
+  }
+};
+
+/**
+ * Get all cities
+ * @route GET /api/v1/city/
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @access Public
+ */
+export const getAll = async (req, res) => {
+  try {
+    const cities = await CityService.getAllCities(req.query);
+    res.status(200).json({ cities, success: true });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Cannot get cities right now.",
+      error: error.message,
       success: false,
     });
   }
