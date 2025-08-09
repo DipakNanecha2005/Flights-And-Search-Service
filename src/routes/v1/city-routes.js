@@ -7,6 +7,9 @@ import {
   update,
 } from "../../controllers/city-controller.js";
 
+/**
+ * Router for City endpoints.
+ */
 const router = express.Router();
 
 router.get("/:id", get);

@@ -3,17 +3,21 @@
  * @param {typeof import('sequelize')} Sequelize
  */
 export async function up(queryInterface, Sequelize) {
-  await queryInterface.createTable("Cities", {
+  await queryInterface.createTable("Airplanes", {
     id: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
       type: Sequelize.INTEGER,
     },
-    name: {
+    modelNumber: {
       type: Sequelize.STRING,
       allowNull: false,
-      unique: true,
+    },
+    capacity: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      defaultValue: 150,
     },
     createdAt: {
       allowNull: false,
@@ -31,5 +35,5 @@ export async function up(queryInterface, Sequelize) {
  * @param {typeof import('sequelize')} Sequelize
  */
 export async function down(queryInterface, Sequelize) {
-  await queryInterface.dropTable("Cities");
+  await queryInterface.dropTable("Airplanes");
 }

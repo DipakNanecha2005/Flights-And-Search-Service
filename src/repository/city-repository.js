@@ -1,6 +1,5 @@
 import { Op } from "sequelize";
-import db from "../models/index.js";
-const { City } = db;
+const { City } = (await import("../models/index.js")).default;
 
 /**
  * This Repository class interact with the City model.
@@ -29,11 +28,11 @@ class CityRepository {
 
   /**
    * Inserts a new city record into the database.
-   * @param {Object} data - Body object
+   * @param {{name: String}} data - City creation payload.
    */
-  async createCity({ name }) {
+  async createCity(data) {
     try {
-      const city = await City.create({ name });
+      const city = await City.create({ name: data.name });
       return city;
     } catch (error) {
       error.message = `Failed to create city. ${error.message}`;
@@ -44,7 +43,9 @@ class CityRepository {
   /**
    * Updates a city record by its ID.
    * @param {String} cityId - City id
-   * @param {Object}  data - Body object
+   * @param {{
+   *  name: String
+   * }}  data - City updation payload.
    */
   async updateCity(cityId, data) {
     try {
@@ -92,6 +93,9 @@ class CityRepository {
 
   /**
    * Fetches all the cities from the database.
+   * @param {{
+   *  name: String
+   * }} [filter] - optional filter object
    */
   async getAllCities(filter) {
     try {
@@ -121,4 +125,9 @@ class CityRepository {
   }
 }
 
+/**
+ * Singleton instance of {@link CityRepository}.
+ *
+ * Handles all data-access-level operations (no business logic).
+ */
 export const cityRepositoryInstance = new CityRepository();

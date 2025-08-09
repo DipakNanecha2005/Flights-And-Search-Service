@@ -21,10 +21,13 @@ Create a `.env` file in the root directory and add the following environment var
 
 ```ini
 # Node environment
-NODE_ENV=development
+NODE_ENV=development #production
 
 # port
 PORT=5000
+
+# Database Sync
+SYNC_DB=false # true
 ```
 
 > 💡 You can adjust the values as needed for your local setup.
@@ -55,7 +58,7 @@ Once your `config.json` is set up, run the following command inside the `src/` d
 npx sequelize db:create
 ```
 
-### 5. Start the service
+### 5. Run Migrations
 
 Run Sequelize migrations to create the necessary tables:
 
@@ -63,7 +66,15 @@ Run Sequelize migrations to create the necessary tables:
 npx sequelize db:migrate
 ```
 
-### 6. Start the service
+### 6. Seed the Database
+
+Populate the database with initial data:
+
+```bash
+npx sequelize db:seed:all
+```
+
+### 7. Start the service
 
 Now start the server:
 

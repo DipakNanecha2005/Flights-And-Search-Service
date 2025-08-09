@@ -5,30 +5,32 @@ import { Model } from "sequelize";
  * @param {import('sequelize').DataTypes} DataTypes
  */
 export default (sequelize, DataTypes) => {
-  class City extends Model {
+  class Airplane extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      this.hasMany(models.Airport, {
-        foreignKey: "cityId",
-      });
+      // define association here
     }
   }
-  City.init(
+  Airplane.init(
     {
-      name: {
+      modelNumber: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
+      },
+      capacity: {
+        type: DataTypes.INTEGER,
+        defaultValue: 150,
+        allowNull: false,
       },
     },
     {
       sequelize,
-      modelName: "City",
+      modelName: "Airplane",
     }
   );
-  return City;
+  return Airplane;
 };

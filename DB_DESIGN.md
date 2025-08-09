@@ -2,12 +2,12 @@
 
 ## Tables
 
-- Airline
+- Airline (Airplane)
 - Flights
 - Airport
 - City
 
-### Airline Table
+### Airline (Airplane) Table
 
 - id
 - model_number
@@ -18,13 +18,15 @@
 ### Flights Table
 
 - id
-- src_airport_id (or departure_city_id)
-- dest_airport_id (or destination_city_id)
+- Flight number
 - airplane_id
-- airport_id
+- departureAirportId
+- arrivalAirportId
 - departure (time and date both)
 - arrival (time and date both)
-- Fligth number
+- price
+- boardindGate
+- totalSeats (Inherit from airplane table)
 
 ### Airport Table
 

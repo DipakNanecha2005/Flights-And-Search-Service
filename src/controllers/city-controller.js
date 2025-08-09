@@ -3,8 +3,8 @@ import { CityService } from "../services/city-service.js";
 /**
  * Get City
  * @route GET /api/v1/city/:id
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
+ * @param {import('express').Request} req - Express request object
+ * @param {import('express').Response} res - Express response object
  * @access Public
  */
 export const get = async (req, res) => {
@@ -24,8 +24,8 @@ export const get = async (req, res) => {
 /**
  * Create City
  * @route POST /api/v1/city
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
+ * @param {import('express').Request} req - Express request object
+ * @param {import('express').Response} res - Express response object
  * @access Admin
  */
 export const create = async (req, res) => {
@@ -49,8 +49,8 @@ export const create = async (req, res) => {
 /**
  * Update City
  * @route PATCH /api/v1/city/:id
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
+ * @param {import('express').Request} req - Express request object
+ * @param {import('express').Response} res - Express response object
  * @access Admin
  */
 export const update = async (req, res) => {
@@ -75,8 +75,8 @@ export const update = async (req, res) => {
 /**
  * Delete City
  * @route DELETE /api/v1/city/:id
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
+ * @param {import('express').Request} req - Express request object
+ * @param {import('express').Response} res - Express response object
  * @access Admin
  */
 export const remove = async (req, res) => {
@@ -105,8 +105,8 @@ export const remove = async (req, res) => {
 /**
  * Get all cities
  * @route GET /api/v1/city/
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
+ * @param {import('express').Request} req - Express request object
+ * @param {import('express').Response} res - Express response object
  * @access Public
  */
 export const getAll = async (req, res) => {

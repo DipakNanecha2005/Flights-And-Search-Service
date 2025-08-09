@@ -42,7 +42,9 @@ class CityService {
   /**
    * Updates an existing city by ID.
    * @param {String} cityId - City id
-   * @param {Object} data - Body object
+   * @param {{
+   *  name: String
+   * }} data - Body object
    */
   async updateCity(cityId, data) {
     try {
@@ -81,7 +83,12 @@ class CityService {
   }
 }
 
-const CityServiceinstancce = new CityService();
+/**
+ * Singleton instance of {@link CityService}.
+ *
+ * Provides the service layer methods to handle City operations.
+ */
+const CityServiceinstance = new CityService();
 
 export default CityService;
-export { CityServiceinstancce as CityService };
+export { CityServiceinstance as CityService };
