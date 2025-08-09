@@ -39,7 +39,7 @@ export async function up(queryInterface, Sequelize) {
       type: Sequelize.INTEGER,
       allowNull: false,
     },
-    boardindGate: {
+    boardingGate: {
       type: Sequelize.STRING,
     },
     totalSeats: {
