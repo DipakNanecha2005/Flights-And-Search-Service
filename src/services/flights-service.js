@@ -19,7 +19,7 @@ class FlightService {
 
   /**
    * Retrieves a flight by its ID.
-   * @param {String} flightId - Flight id
+   * @param {number | string} flightId - Flight id
    */
   async getFlight(flightId) {
     try {
@@ -67,7 +67,7 @@ class FlightService {
 
   /**
    * Updates an existing flight by ID.
-   * @param {String} flightId - Flight id
+   * @param {number | string} flightId - Flight id
    * @param {Object} data - Body object
    */
   async updateFlight(flightId, data) {
@@ -81,7 +81,7 @@ class FlightService {
 
   /**
    * Deletes a flight by ID.
-   * @param {String} flightId - Flight id
+   * @param {number} flightId - Flight id
    */
   async deleteFlight(flightId) {
     try {
@@ -94,12 +94,11 @@ class FlightService {
 
   /**
    * Retrieves all flights.
+   * @param {Object} filter - Request query object
    */
   async getAllFlights(filter) {
     try {
-      const flights = await this.#flightRepository.getAllFlights({
-        name: filter?.name,
-      });
+      const flights = await this.#flightRepository.getAllFlights(filter);
       return flights;
     } catch (error) {
       throw error;
@@ -112,7 +111,7 @@ class FlightService {
  *
  * Provides the service layer methods to handle Flight operations.
  */
-const FlightServiceinstancce = new FlightService();
+const FlightServiceinstance = new FlightService();
 
 export default FlightService;
-export { FlightServiceinstancce as FlightService };
+export { FlightServiceinstance as FlightService };

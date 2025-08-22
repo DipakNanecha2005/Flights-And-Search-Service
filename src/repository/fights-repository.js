@@ -1,4 +1,5 @@
 const { Flights } = (await import("../models/index.js")).default;
+import { Op } from "sequelize";
 
 /**
  * This Repository class interact with the Flight model.
@@ -8,7 +9,7 @@ const { Flights } = (await import("../models/index.js")).default;
 class FlightRepository {
   /**
    * Fetches a flight from the database by its ID.
-   * @param {String} flightId - Flight id
+   * @param {number | string} flightId - Flight id
    */
   async getFlight(flightId) {
     try {
@@ -49,7 +50,7 @@ class FlightRepository {
 
   /**
    * Updates a flight record by its ID.
-   * @param {String} flightId - Flight id
+   * @param {number | string} flightId - Flight id
    * @param {{
    *  flightNumber?: string,
    *  airplaneId?: number,
@@ -83,7 +84,7 @@ class FlightRepository {
 
   /**
    * Deletes a flight record by its ID.
-   * @param {String} flightId - Flight id
+   * @param {number} flightId - Flight id
    */
   async deleteFlight(flightId) {
     try {
@@ -105,31 +106,52 @@ class FlightRepository {
   }
 
   /**
+   * Helper function for creating filter object
+   * @param {{
+   *  arrivalAirportId?: number,
+   *  departureAirportId?: number,
+   *  minPrice?: number,
+   *  maxPrice?: number,
+   * }} [data] - Raw filter object
+   */
+  #createFilter(data) {
+    let filter = {};
+
+    if (data.arrivalAirportId) {
+      filter.arrivalAirportId = data.arrivalAirportId;
+    }
+    if (data.departureAirportId) {
+      filter.departureAirportId = data.departureAirportId;
+    }
+    if (data.minPrice || data.maxPrice) {
+      const priceFilter = {};
+      if (data.minPrice) priceFilter[Op.gte] = data.minPrice;
+      if (data.maxPrice) priceFilter[Op.lte] = data.maxPrice;
+
+      if (Object.getOwnPropertySymbols(priceFilter).length > 0) {
+        filter.price = priceFilter;
+      }
+    }
+
+    return filter;
+  }
+
+  /**
    * Fetches all the flights from the database.
    * @param {{
-   *  name: String
+   *  arrivalAirportId?: number,
+   *  departureAirportId?: number,
+   *  minPrice?: number,
+   *  maxPrice?: number,
    * }} [filter] - optional filter object
    */
   async getAllFlights(filter) {
     try {
-      if (filter?.name) {
-        const flights = await Flights.findAll({
-          where: {
-            name: {
-              [Op.startsWith]: filter.name,
-            },
-          },
-        });
+      const filterObject = this.#createFilter(filter);
 
-        return flights;
-      }
-
-      const flights = await Flights.findAll();
-      if (flights.length === 0) {
-        const error = new Error("No flights found.");
-        error.statusCode = 404;
-        throw error;
-      }
+      const flights = await Flights.findAll({
+        where: filterObject,
+      });
 
       return flights;
     } catch (error) {

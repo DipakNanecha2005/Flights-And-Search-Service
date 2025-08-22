@@ -20,10 +20,9 @@ export async function up(queryInterface, Sequelize) {
     cityId: {
       type: Sequelize.INTEGER,
       onDelete: "CASCADE",
-      References: {
+      references: {
         model: "Cities",
         key: "id",
-        as: "cityId",
       },
       allowNull: false,
     },

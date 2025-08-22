@@ -1,6 +1,6 @@
 /**
+ * @param {import('sequelize').QueryInterface} queryInterface
  * @param {typeof import('sequelize')} Sequelize
- * @param {import('sequelize').DataTypes} DataTypes
  */
 export async function up(queryInterface, Sequelize) {
   await queryInterface.createTable("Flights", {
@@ -58,8 +58,8 @@ export async function up(queryInterface, Sequelize) {
 }
 
 /**
+ * @param {import('sequelize').QueryInterface} queryInterface
  * @param {typeof import('sequelize')} Sequelize
- * @param {import('sequelize').DataTypes} DataTypes
  */
 export async function down(queryInterface, Sequelize) {
   await queryInterface.dropTable("Flights");

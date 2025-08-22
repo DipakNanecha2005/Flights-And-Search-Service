@@ -8,7 +8,7 @@ const { Airplane } = (await import("../models/index.js")).default;
 class AirplaneRepository {
   /**
    * Fetches a airplane from the database by its ID.
-   * @param {String} airplaneId - Airplane id
+   * @param {number} airplaneId - Airplane id
    */
   async getAirplane(airplaneId) {
     try {

@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * @param {import('sequelize').QueryInterface} queryInterface
  * @param {typeof import('sequelize')} Sequelize

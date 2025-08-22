@@ -1,4 +1,7 @@
 import { Op } from "sequelize";
+import { ClientError } from "../utils/errors/Client-Error.js";
+import { AppError } from "../utils/errors/App-Error.js";
+import { ValidationError } from "../utils/errors/Validation-Error.js";
 const { City } = (await import("../models/index.js")).default;
 
 /**
@@ -9,43 +12,53 @@ const { City } = (await import("../models/index.js")).default;
 class CityRepository {
   /**
    * Fetches a city from the database by its ID.
-   * @param {String} cityId - City id
+   * @param {number | string} cityId - City id
    */
   async getCity(cityId) {
     try {
       const city = await City.findByPk(cityId);
       if (!city) {
-        const error = new Error(`City with id ${cityId} not found.`);
-        error.statusCode = 404;
-        throw error;
+        throw new ClientError(
+          "AttributeNotFound",
+          "Invalid city id in the request.",
+          "Please check the ID again, No city record found.",
+          404
+        );
       }
 
       return city;
     } catch (error) {
-      throw error;
+      if (error instanceof ClientError) {
+        throw error;
+      }
+
+      throw new AppError(
+        "RepositoryError",
+        "Cannot fetch city.",
+        `Failed to fetch a city record: ${error.message}`,
+        500
+      );
     }
   }
 
   /**
    * Inserts a new city record into the database.
-   * @param {{name: String}} data - City creation payload.
+   * @param {{ name: string }} data - City creation payload.
    */
   async createCity(data) {
     try {
       const city = await City.create({ name: data.name });
       return city;
     } catch (error) {
-      error.message = `Failed to create city. ${error.message}`;
+      error.message = `Failed to create city, ${error.message}`;
       throw error;
     }
   }
 
   /**
    * Updates a city record by its ID.
-   * @param {String} cityId - City id
-   * @param {{
-   *  name: String
-   * }}  data - City updation payload.
+   * @param {number | string} cityId - City id
+   * @param {{ name: string }}  data - City updation payload.
    */
   async updateCity(cityId, data) {
     try {
@@ -55,22 +68,29 @@ class CityRepository {
         },
       });
       if (!updated) {
-        const error = new Error(
-          `City with id ${cityId} not found or no update occurred.`
+        throw new ClientError(
+          "AttributeNotFound",
+          "Invalid city id in the request or no update occurred.",
+          "Please verify the city ID and ensure update data is valid.",
+          404
         );
-        error.statusCode = 404;
-        throw error;
       }
+
       const city = await this.getCity(cityId);
       return city;
     } catch (error) {
+      if (error.name === "SequelizeUniqueConstraintError") {
+        throw new ValidationError(error);
+      }
+
+      error.message = `Failed to update city, ${error.message}`;
       throw error;
     }
   }
 
   /**
    * Deletes a city record by its ID.
-   * @param {String} cityId - City id
+   * @param {number | string} cityId - City id
    */
   async deleteCity(cityId) {
     try {
@@ -80,22 +100,24 @@ class CityRepository {
         },
       });
       if (!deleted) {
-        const error = new Error(`City with id ${cityId} not found.`);
-        error.statusCode = 404;
-        throw error;
+        throw new ClientError(
+          "AttributeNotFound",
+          "Invalid city id in the request or no delete occurred.",
+          "Please verify the city ID.",
+          404
+        );
       }
 
       return deleted;
     } catch (error) {
+      error.message = `Failed to delete city, ${error.message}`;
       throw error;
     }
   }
 
   /**
    * Fetches all the cities from the database.
-   * @param {{
-   *  name: String
-   * }} [filter] - optional filter object
+   * @param {{ name: string }} [filter] - optional filter object
    */
   async getAllCities(filter) {
     try {
@@ -107,19 +129,31 @@ class CityRepository {
             },
           },
         });
+        if (cities.length === 0) {
+          throw new AppError(
+            "NotFoundError",
+            "No cities found.",
+            "The city list is currently empty.",
+            404
+          );
+        }
 
         return cities;
       }
 
       const cities = await City.findAll();
       if (cities.length === 0) {
-        const error = new Error("No cities found.");
-        error.statusCode = 404;
-        throw error;
+        throw new AppError(
+          "NotFoundError",
+          "No cities found.",
+          "The city list is currently empty.",
+          404
+        );
       }
 
       return cities;
     } catch (error) {
+      error.message = `Failed to fetch all the cities, ${error.message}`;
       throw error;
     }
   }

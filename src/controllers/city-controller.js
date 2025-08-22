@@ -1,7 +1,8 @@
 import { CityService } from "../services/city-service.js";
+import { Log } from "../utils/Log.js";
 
 /**
- * Get City
+ * Get a city
  * @route GET /api/v1/city/:id
  * @param {import('express').Request} req - Express request object
  * @param {import('express').Response} res - Express response object
@@ -10,19 +11,25 @@ import { CityService } from "../services/city-service.js";
 export const get = async (req, res) => {
   try {
     const city = await CityService.getCity(req.params.id);
-    res.status(200).json({ city, success: true });
+    res.status(200).json({
+      data: city,
+      success: true,
+      error: {},
+      message: "Successfully fetched a city.",
+    });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      message: "Cannot get city right now.",
-      error: error.message,
+    Log.error(error);
+    res.status(error.statusCode).json({
+      message: error.message,
+      error: error.explanation,
+      data: {},
       success: false,
     });
   }
 };
 
 /**
- * Create City
+ * Create a city
  * @route POST /api/v1/city
  * @param {import('express').Request} req - Express request object
  * @param {import('express').Response} res - Express response object
@@ -32,22 +39,24 @@ export const create = async (req, res) => {
   try {
     const city = await CityService.createCity(req.body);
     res.status(201).json({
-      city,
+      data: city,
       success: true,
+      error: {},
       message: "Successfully created a city",
     });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      message: "Cannot create city right now.",
-      error: error.message,
+    Log.error(error);
+    res.status(error.statusCode).json({
+      message: error.message,
+      error: error.explanation,
+      data: {},
       success: false,
     });
   }
 };
 
 /**
- * Update City
+ * Update a city
  * @route PATCH /api/v1/city/:id
  * @param {import('express').Request} req - Express request object
  * @param {import('express').Response} res - Express response object
@@ -58,22 +67,24 @@ export const update = async (req, res) => {
     const response = await CityService.updateCity(req.params.id, req.body);
 
     res.status(200).json({
-      response,
+      data: response,
       success: true,
+      error: {},
       message: "Successfully updated a city",
     });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      message: "Cannot update city right now.",
-      error: error.message,
+    Log.error(error);
+    res.status(error.statusCode).json({
+      message: error.message,
+      error: error.explanation,
+      data: {},
       success: false,
     });
   }
 };
 
 /**
- * Delete City
+ * Delete a city
  * @route DELETE /api/v1/city/:id
  * @param {import('express').Request} req - Express request object
  * @param {import('express').Response} res - Express response object
@@ -82,21 +93,19 @@ export const update = async (req, res) => {
 export const remove = async (req, res) => {
   try {
     const response = await CityService.deleteCity(req.params.id);
-    if (!response) {
-      return res.status(500).json({
-        success: response,
-        message: "Internal server error | Cannot delete city right now",
-      });
-    }
+
     res.status(200).json({
-      success: response,
+      data: response,
+      success: true,
+      error: {},
       message: "Successfully deleted a city",
     });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      message: "Cannot delete city right now.",
-      error: error.message,
+    Log.error(error);
+    res.status(error.statusCode).json({
+      message: error.message,
+      error: error.explanation,
+      data: {},
       success: false,
     });
   }
@@ -112,12 +121,18 @@ export const remove = async (req, res) => {
 export const getAll = async (req, res) => {
   try {
     const cities = await CityService.getAllCities(req.query);
-    res.status(200).json({ cities, success: true });
+    res.status(200).json({
+      data: cities,
+      success: true,
+      error: {},
+      message: "Successfully fetched all the cities.",
+    });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      message: "Cannot get cities right now.",
-      error: error.message,
+    Log.error(error);
+    res.status(error.statusCode).json({
+      message: error.message,
+      error: error.explanation,
+      data: {},
       success: false,
     });
   }

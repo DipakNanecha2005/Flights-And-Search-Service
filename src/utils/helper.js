@@ -1,7 +1,7 @@
 /**
  * Compare Time
- * @param {Date} timeString1 - Arrival time in String
- * @param {Date} timeString2 - Departure time in String
+ * @param {string} timeString1 - Arrival time in String
+ * @param {string} timeString2 - Departure time in String
  * @returns {Boolean}
  */
 export const compareTime = (timeString1, timeString2) => {
